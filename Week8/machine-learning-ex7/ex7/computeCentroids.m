@@ -26,8 +26,11 @@ centroids = zeros(K, n);
 % Note: You can use a for-loop over the centroids to compute this.
 %
 
-
-
+for k = 1:K
+	assigned = idx == k;
+	x_new = bsxfun(@times, X, assigned);
+	centroids(k, :) = sum(x_new) ./ sum(assigned);
+end
 
 
 
