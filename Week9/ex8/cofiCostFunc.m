@@ -39,22 +39,25 @@ Theta_grad = zeros(size(Theta));
 %        Theta_grad - num_users x num_features matrix, containing the 
 %                     partial derivatives w.r.t. to each element of Theta
 %
+hypothesis = X * Theta';
+cost = (hypothesis - Y) .* R;
+cost = cost .^ 2;
+J = sum(sum(cost)) / 2;
+J = J + lambda / 2 * (sum(sum(Theta .^ 2)) + sum(sum(X .^ 2)));
 
+for i = 1: num_movies,
+	x = X(i, :);
+	y = Y(i, :);
+	hypothesis = (x * Theta' - y) .* R(i, :);
+	X_grad(i, :) = hypothesis * Theta + lambda .* x;
+end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+for j = 1: num_users,
+	theta = Theta(j, :);
+	y = Y(:, j);
+	hypothesis = (X * theta' - y) .* R(:, j);
+	Theta_grad(j, :) = hypothesis' * X + lambda .* theta;
+end
 % =============================================================
 
 grad = [X_grad(:); Theta_grad(:)];
